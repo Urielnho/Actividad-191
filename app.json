@@ -1,25 +1,57 @@
 {
   "expo": {
-    "name": "1",
-    "slug": "1",
+    "name": "WorkSafe",
+    "slug": "worksafe",
     "version": "1.0.0",
+    "scheme": "worksafe",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.uriel.worksafe",
+      "infoPlist": {
+        "NSFaceIDUsageDescription": "WorkSafe utiliza Face ID para proteger tus archivos de trabajo.",
+        "UIFileSharingEnabled": false,
+        "LSSupportsOpeningDocumentsInPlace": false,
+        "ITSAppUsesNonExemptEncryption": false
+      }
     },
     "android": {
-      "adaptiveIcon": {
-        "backgroundColor": "#E6F4FE",
-        "foregroundImage": "./assets/android-icon-foreground.png",
-        "backgroundImage": "./assets/android-icon-background.png",
-        "monochromeImage": "./assets/android-icon-monochrome.png"
-      },
-      "predictiveBackGestureEnabled": false
+      "package": "com.uriel.worksafe",
+      "allowBackup": false,
+      "softwareKeyboardLayoutMode": "resize"
+    },
+    "plugins": [
+      "expo-router",
+      [
+        "expo-local-authentication",
+        {
+          "faceIDPermission": "WorkSafe utiliza Face ID para proteger tus archivos de trabajo."
+        }
+      ],
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "WorkSafe utiliza tus fotografías para guardar evidencias de trabajo.",
+          "cameraPermission": "WorkSafe utiliza la cámara para tomar evidencias de trabajo.",
+          "microphonePermission": false
+        }
+      ],
+      [
+        "expo-video",
+        {
+          "supportsBackgroundPlayback": false,
+          "supportsPictureInPicture": false
+        }
+      ],
+      "expo-font"
+    ],
+    "experiments": {
+      "typedRoutes": true
     },
     "web": {
-      "favicon": "./assets/favicon.png"
+      "bundler": "metro",
+      "output": "single"
     }
   }
 }
