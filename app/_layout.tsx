@@ -22,7 +22,7 @@ function Gate() {
         setReady(true);
       } catch {
         setPrivacyError(
-          "No se pudo activar la protección de pantalla. Reinicia WorkSafe o utiliza un Development Build.",
+          "No se pudo activar la protección de pantalla. Cierra y vuelve a abrir WorkSafe.",
         );
       }
     })();

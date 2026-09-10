@@ -49,7 +49,7 @@ export async function checkBiometricAvailability(): Promise<BiometricInfo> {
     Constants.appOwnership === "expo" &&
     (type.kind === "face" || !hardware);
   const reason = expoFace
-    ? "Face ID no está disponible en Expo Go. Requiere instalar WorkSafe en tu iPhone (Development Build)."
+    ? "Activa Face ID o la huella en los ajustes de tu dispositivo para proteger tus archivos."
     : !hardware
       ? "Este dispositivo no dispone de biometría compatible."
       : !enrolled
