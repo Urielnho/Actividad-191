@@ -1,5 +1,4 @@
 import * as LocalAuthentication from "expo-local-authentication";
-import Constants from "expo-constants";
 import { Platform } from "react-native";
 
 export interface BiometricInfo {
@@ -44,18 +43,15 @@ export async function checkBiometricAvailability(): Promise<BiometricInfo> {
     LocalAuthentication.getEnrolledLevelAsync(),
   ]);
   const type = getBiometricType(types);
-  const expoFace =
-    Platform.OS === "ios" &&
-    Constants.appOwnership === "expo" &&
-    (type.kind === "face" || !hardware);
-  const reason = expoFace
-    ? "Activa Face ID o la huella en los ajustes de tu dispositivo para proteger tus archivos."
-    : !hardware
+  const iosPasscodeAvailable =
+    Platform.OS === "ios" && level > 0;
+  const available = hardware || iosPasscodeAvailable;
+  const reason = !available
       ? "Este dispositivo no dispone de biometría compatible."
       : !enrolled
         ? "Registra tu rostro o huella en la configuración del dispositivo."
         : undefined;
-  return { ...type, available: hardware && !expoFace, enrolled, level, reason };
+  return { ...type, available, enrolled, level, reason };
 }
 const messages: Record<string, string> = {
   user_cancel: "Autenticación cancelada.",
@@ -91,8 +87,8 @@ export async function authenticateUser(
     const result = await LocalAuthentication.authenticateAsync({
       promptMessage: prompt,
       cancelLabel: "Cancelar",
-      fallbackLabel: "",
-      disableDeviceFallback: true,
+      fallbackLabel: Platform.OS === "ios" ? "Usar código" : "",
+      disableDeviceFallback: Platform.OS !== "ios",
       biometricsSecurityLevel: "weak",
     });
     return result.success === true

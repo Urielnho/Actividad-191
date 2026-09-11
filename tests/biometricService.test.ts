@@ -44,7 +44,7 @@ test("does not assume an iPhone has Face ID", () => {
   Object.defineProperty(Platform, "OS", { value: "ios" });
   expect(getBiometricType([1]).label).toBe("Touch ID");
 });
-test("blocks Face ID inside Expo Go without invoking native authentication", async () => {
+test("allows iPhone authentication fallback in Expo Go", async () => {
   Object.defineProperty(Platform, "OS", { value: "ios" });
   Object.defineProperty(Constants, "appOwnership", {
     value: "expo",
@@ -53,11 +53,12 @@ test("blocks Face ID inside Expo Go without invoking native authentication", asy
   jest
     .mocked(LocalAuthentication.supportedAuthenticationTypesAsync)
     .mockResolvedValue([2]);
-  expect((await checkBiometricAvailability()).reason).toContain(
-    "Activa Face ID",
+  expect((await checkBiometricAvailability()).available).toBe(true);
+  jest.mocked(LocalAuthentication.authenticateAsync).mockResolvedValue({ success: true });
+  expect((await authenticateUser()).success).toBe(true);
+  expect(LocalAuthentication.authenticateAsync).toHaveBeenCalledWith(
+    expect.objectContaining({ disableDeviceFallback: false }),
   );
-  expect((await authenticateUser()).success).toBe(false);
-  expect(LocalAuthentication.authenticateAsync).not.toHaveBeenCalled();
 });
 test("blocks devices without enrollment", async () => {
   jest.mocked(LocalAuthentication.isEnrolledAsync).mockResolvedValue(false);
@@ -77,7 +78,7 @@ test.each([
   expect(result.success).toBe(false);
   expect(result.message).toBeTruthy();
 });
-test("only a real success grants access and disables passcode fallback", async () => {
+test("only a real success grants access", async () => {
   jest
     .mocked(LocalAuthentication.authenticateAsync)
     .mockResolvedValue({ success: true });
