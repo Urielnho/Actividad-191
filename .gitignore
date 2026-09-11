@@ -3,8 +3,12 @@
 # dependencies
 node_modules/
 
+# editor and assistant settings
+.claude/
+
 # Expo
 .expo/
+.expo-check/
 dist/
 web-build/
 expo-env.d.ts
