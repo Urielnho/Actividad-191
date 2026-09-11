@@ -54,7 +54,7 @@ test("blocks Face ID inside Expo Go without invoking native authentication", asy
     .mocked(LocalAuthentication.supportedAuthenticationTypesAsync)
     .mockResolvedValue([2]);
   expect((await checkBiometricAvailability()).reason).toContain(
-    "Development Build",
+    "Activa Face ID",
   );
   expect((await authenticateUser()).success).toBe(false);
   expect(LocalAuthentication.authenticateAsync).not.toHaveBeenCalled();
